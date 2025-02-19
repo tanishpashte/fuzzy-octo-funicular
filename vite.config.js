@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig(({ mode }) => { // Access mode here
   return {
+    base: mode === 'production' ? '/fuzzy-octo-funicular/' : '/', // Now mode is defined
     plugins: [react(), tailwindcss()],
-    base: mode === 'production' ? '/yourrepository/' : '/', // Now mode is defined
   };
 });
