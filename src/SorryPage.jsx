@@ -1,3 +1,5 @@
+
+import { Link } from 'react-router-dom';  // Import Link
 function SorryPage(){
     return (
         <div className="flex flex-col w-screen h-screen justify-center items-center px-8 text-center">
@@ -9,8 +11,8 @@ function SorryPage(){
             <p>Aisa kayko karta hai &#x1F972;</p>
             <p>Maan jao na</p>
             <div className="flex gap-4 my-6">
-                <button className="p-3 bg-[#5B9A8B] rounded-lg" onClick={() => window.location.href='/flower'}>Ha chalo maan liya</button>
-                <button className="p-3 bg-[#5B9A8B] rounded-lg" onClick={() => window.location.href='/verysorry'}>Nahi manungi</button>
+                <Link to="/flower" className="p-3 bg-[#5B9A8B] rounded-lg">Ha chalo maan liya</Link> {/* Use Link */}
+                <Link to="/verysorry" className="p-3 bg-[#5B9A8B] rounded-lg">Nahi manungi</Link> {/* Use Link */}
             </div>
         </div>
     )

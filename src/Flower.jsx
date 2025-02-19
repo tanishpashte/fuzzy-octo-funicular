@@ -1,30 +1,76 @@
 import "./css/main.css";
 import "./css/style.css";
+import { Link } from 'react-router-dom';
 
 import React, { useEffect } from 'react';
+import { useLocation } from "react-router-dom";
+import { useRef, useState } from 'react';
 
 function Flower() {
-
+    const location = useLocation(); // Get current location
+    const myAudio = useRef(new Audio("https://cdn.pixabay.com/audio/2024/02/14/audio_b9bc3934cc.mp3"));
+    const [isPlaying, setIsPlaying] = useState(false);
+  
     useEffect(() => {
-        document.body.classList.remove("container");
-    
-        return () => {
-        };
-      }, []);
-
-      function toggleAudio() {
-        if (myAudio.paused) { // If paused, play the audio from start
-            // myAudio.currentTime = 0;
-            myAudio.play();
-            console.log("audio played");
-        } else { // If playing, pause the audio
-            myAudio.pause();
-            console.log("audio paused");
-        }
-    }
-    let myAudio = new Audio("https://cdn.pixabay.com/audio/2024/02/14/audio_b9bc3934cc.mp3");
-    myAudio.play();
-    console.log("audio played for first time");
+      document.body.classList.remove("container");
+  
+      const audio = myAudio.current; // Access the audio object
+  
+      const handleEnded = () => {
+        setIsPlaying(false);
+        console.log("audio ended");
+      };
+  
+      const handlePlay = () => {
+        setIsPlaying(true);
+        console.log("audio played");
+      };
+  
+  
+      const handleError = (error) => {
+        console.error("Error playing audio:", error);
+        setIsPlaying(false);
+      }
+  
+      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('play', handlePlay);
+      audio.addEventListener('error', handleError);
+  
+      // Initial Play (only if not already playing due to a refresh)
+      if (!isPlaying) {
+        audio.play().then(handlePlay).catch(handleError);
+      }
+  
+      return () => {
+        audio.pause(); // Pause audio when component unmounts
+        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('play', handlePlay);
+        audio.removeEventListener('error', handleError);
+      };
+    }, []);
+  
+    useEffect(() => {
+      const audio = myAudio.current;
+      return () => {
+        audio.pause();
+        setIsPlaying(false);
+      }
+    }, [location]);
+  
+  
+    const toggleAudio = () => {
+      const audio = myAudio.current;
+      if (audio.paused) {
+        audio.play().then(() => setIsPlaying(true)).catch((error) => {
+          console.error("Error playing audio:", error);
+          setIsPlaying(false);
+        });
+      } else {
+        audio.pause();
+        setIsPlaying(false);
+      }
+    };
+  
 
     return (
         <div className="container">
@@ -344,9 +390,9 @@ function Flower() {
                 <p className="text-xl text-center">Calm down my girl. <br></br>I know you are brave for this! <br />I believe in you !!</p>
                 <p className="text-8xl text-center py-4">&#x1F497;</p>
             </div>
-            <button className="absolute bottom-8 left-20 bg-[#445069] w-48 rounded-lg font-bold" onClick={() => window.location.href = '/'}>
+            <Link to="/" className="absolute bottom-8 left-20 bg-[#445069] w-48 rounded-lg font-bold text-center">
                 <i className="fa-solid fa-house-chimney mr-2"></i><br />Back to home
-            </button>
+            </Link>
             
         </div>
             
